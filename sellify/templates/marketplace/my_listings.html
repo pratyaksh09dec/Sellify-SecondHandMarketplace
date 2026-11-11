@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My listings | Sellify{% endblock %}
+
+{% block content %}
+<h2>My listings</h2>
+
+{% if products %}
+<table class="listing-table">
+    <tr><th>Photo</th><th>Product</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+    {% for product in products %}
+    <tr>
+        <td><img src="{{ product.image.url }}" alt=""></td>
+        <td><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></td>
+        <td>₹{{ product.expected_price }}</td>
+        <td>{% if product.is_sold %}<span class="badge badge-sold">Sold</span>{% else %}For sale{% endif %}</td>
+        <td class="actions">
+            <a href="{% url 'edit_product' product.pk %}" class="btn btn-light">Edit</a>
+            {% if not product.is_sold %}
+            <form action="{% url 'mark_sold' product.pk %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit">Mark sold</button>
+            </form>
+            {% endif %}
+            <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p>You haven't listed anything yet. <a href="{% url 'sell_photo' %}">Sell your first product</a>.</p>
+{% endif %}
+{% endblock %}

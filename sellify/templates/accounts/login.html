@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Login | Sellify{% endblock %}
+
+{% block content %}
+<div class="box narrow">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <p class="muted">New here? <a href="{% url 'register' %}">Create an account</a></p>
+</div>
+{% endblock %}

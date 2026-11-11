@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} | Sellify{% endblock %}
+
+{% block content %}
+<div class="box detail">
+    <div>
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+
+    <div>
+        <h1>{{ product.name }}</h1>
+        {% if product.is_sold %}<span class="badge badge-sold">SOLD</span>{% endif %}
+        <div class="price">₹{{ product.expected_price }}</div>
+
+        {% if product.predicted_price %}
+        <div class="ai-box">
+            <strong>AI estimated price:</strong> ₹{{ product.price_low }} &ndash; ₹{{ product.price_high }}<br>
+            <span class="badge badge-{{ product.price_verdict|slugify }}">{{ product.price_verdict }}</span>
+        </div>
+        {% endif %}
+
+        <table class="specs">
+            <tr><td>Category</td><td>{{ product.get_category_display }}</td></tr>
+            <tr><td>Brand</td><td>{{ product.brand }}</td></tr>
+            <tr><td>Model</td><td>{{ product.model_name|default:"-" }}</td></tr>
+            <tr><td>Age</td><td>{{ product.age_months }} months</td></tr>
+            <tr><td>Condition</td><td>{{ product.get_condition_display }}</td></tr>
+            <tr><td>Original price</td><td>₹{{ product.original_price }}</td></tr>
+            <tr><td>Listed on</td><td>{{ product.created_at|date:"d M Y" }}</td></tr>
+        </table>
+
+        {% if product.description %}<p>{{ product.description|linebreaksbr }}</p>{% endif %}
+
+        <h3>Seller</h3>
+        <p>
+            <strong>{{ product.seller.username }}</strong>
+            {% if seller_profile.city %}&middot; {{ seller_profile.city }}{% endif %}<br>
+            <span class="muted">Member since {{ product.seller.date_joined|date:"M Y" }}</span>
+        </p>
+
+        {% if user.is_authenticated %}
+            <p>
+                {% if seller_profile.phone %}Phone: <a href="tel:{{ seller_profile.phone }}">{{ seller_profile.phone }}</a><br>{% endif %}
+                Email: <a href="mailto:{{ product.seller.email }}">{{ product.seller.email }}</a>
+            </p>
+        {% else %}
+            <p class="muted"><a href="{% url 'login' %}?next={{ request.path }}">Login</a> to see the seller's contact details.</p>
+        {% endif %}
+
+        {% if user == product.seller %}
+            <div class="buttons">
+                <a href="{% url 'edit_product' product.pk %}" class="btn btn-light">Edit</a>
+                <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Delete</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

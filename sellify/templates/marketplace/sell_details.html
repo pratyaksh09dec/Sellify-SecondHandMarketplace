@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sell | Sellify{% endblock %}
+
+{% block content %}
+<div class="box narrow">
+    <h2>Sell a product: step 2 of 2</h2>
+    <img src="{{ image_url }}" alt="Your photo" class="preview">
+
+    <div class="ai-box">
+        {% if ai_category %}
+            AI thinks this is a <strong>{{ ai_category }}</strong> ({{ ai_confidence }}% sure).
+            Change the category below if it's wrong.
+        {% else %}
+            AI couldn't recognise the photo. Please choose the category yourself.
+        {% endif %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if predicted %}
+            <div class="ai-box">
+                <strong>Suggested price:</strong> ₹{{ low }} &ndash; ₹{{ high }}<br>
+                <span class="muted">Based on age and condition. Set your selling price inside this range for a fair listing.</span>
+            </div>
+        {% endif %}
+
+        <div class="buttons">
+            <button type="submit" name="action" value="estimate" class="btn-light btn">Estimate price</button>
+            <button type="submit" name="action" value="publish">Publish listing</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

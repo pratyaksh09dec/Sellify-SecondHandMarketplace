@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sell | Sellify{% endblock %}
+
+{% block content %}
+<div class="box narrow">
+    <h2>Sell a product: step 1 of 2</h2>
+    <p>Upload a clear photo. Our AI will try to recognise what it is.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload and detect</button>
+    </form>
+    <p class="muted">The first upload can take a minute while the AI model loads.</p>
+</div>
+{% endblock %}

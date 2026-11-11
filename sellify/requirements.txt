@@ -1,0 +1,7 @@
+django
+pillow
+pandas
+scikit-learn
+joblib
+torch
+transformers

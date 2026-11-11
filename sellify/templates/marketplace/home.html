@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="browse">
+    <form method="get" class="box filters">
+        <h3>Search &amp; filter</h3>
+        <p>
+            <label>Search</label>
+            <input type="text" name="q" value="{{ f.q }}" placeholder="e.g. iPhone">
+        </p>
+        <p>
+            <label>Category</label>
+            <select name="category">
+                <option value="">All categories</option>
+                {% for value, text in categories %}
+                    <option value="{{ value }}" {% if f.category == value %}selected{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label>Condition</label>
+            <select name="condition">
+                <option value="">Any condition</option>
+                {% for value, text in conditions %}
+                    <option value="{{ value }}" {% if f.condition == value %}selected{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label>Brand</label>
+            <input type="text" name="brand" value="{{ f.brand }}" placeholder="e.g. Samsung">
+        </p>
+        <p>
+            <label>Price range (₹)</label>
+            <span class="price-inputs">
+                <input type="number" name="min_price" value="{{ f.min_price }}" placeholder="Min" min="0">
+                <input type="number" name="max_price" value="{{ f.max_price }}" placeholder="Max" min="0">
+            </span>
+        </p>
+        <div class="buttons">
+            <button type="submit">Apply</button>
+            <a href="{% url 'home' %}" class="btn btn-light">Clear</a>
+        </div>
+    </form>
+
+    <section>
+        <h2>{{ products|length }} product{{ products|length|pluralize }} for sale</h2>
+        <div class="product-grid">
+            {% for product in products %}
+                <a href="{% url 'product_detail' product.pk %}" class="product-card">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <div class="info">
+                        <div class="name">{{ product.name }}</div>
+                        <div class="price">₹{{ product.expected_price }}</div>
+                        <div class="muted">{{ product.get_condition_display }} &middot; {{ product.get_category_display }}</div>
+                        {% if product.price_verdict %}
+                            <span class="badge badge-{{ product.price_verdict|slugify }}">{{ product.price_verdict }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% empty %}
+                <p>No products match your search.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

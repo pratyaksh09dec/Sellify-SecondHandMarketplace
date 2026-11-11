@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}My profile | Sellify{% endblock %}
+
+{% block content %}
+<div class="box narrow">
+    <h2>My profile</h2>
+    <p><strong>Username:</strong> {{ user.username }}<br>
+       <strong>Email:</strong> {{ user.email }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <p class="muted">Buyers see your phone and email on your listings so they can contact you.</p>
+</div>
+{% endblock %}
